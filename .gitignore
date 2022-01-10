@@ -1,0 +1,4 @@
+# Ignore Files
+
+# Ignore the local installation of vLang
+v/
