@@ -5,8 +5,9 @@ import crypto.aes
 // main : 
 fn main() {
     println('Hello, World!')
+
     // file just ultimately be 16 bytes
-    f := os.read_file('file.txt')?
+    f := os.read_file('test/file3.txt')?
     println("$f")
 
     j := f.bytes()
@@ -26,6 +27,7 @@ fn main() {
     mut encrypted := []byte{len: aes.block_size}
 
     cipher.encrypt(mut encrypted, j)
+
     println(encrypted)
 
     mut decrypted := []byte{len: aes.block_size}
@@ -34,9 +36,9 @@ fn main() {
 
     bytestr := encrypted.bytestr()
     // write to the file that content has been received and add like ` 1`
-    os.write_file('file.txt', bytestr)?
+    os.write_file('test/enc.txt', bytestr)?
 
-    g := os.read_file('file.txt')?
+    g := os.read_file('test/enc.txt')?
     println("$g")
 
 }

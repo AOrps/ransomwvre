@@ -5,22 +5,23 @@ SHELL=/bin/bash
 SOURCEDIR = src
 EXECUTABLE = ransomwvre
 
-
 all : compile
 
 dep: 
 ifneq (,$(wildcard ./v))
-# V compiled into dir
+# V source compiled into dir
 	@printf ""
 else
-# V not compiled into dir
+# V source not compiled into dir
 	@./$(SOURCEDIR)/dep.sh
 endif
 
 compile: dep clean
 	@./v/v $(SOURCEDIR)/main.v
-	@mv $(SOURCEDIR)/main.v $(EXECUTABLE)
-	@rm $(SOURCEDIR)/main
+	@mv $(SOURCEDIR)/main $(EXECUTABLE)
+
+run: compile
+	@./$(EXECUTABLE)
 
 clean:
 ifneq (,$(wildcard ./$(EXECUTABLE)))

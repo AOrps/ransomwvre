@@ -11,3 +11,6 @@ src/ransomwvre
 main
 ransom
 ransomwvre
+
+# Test Files
+test/enc.txt
