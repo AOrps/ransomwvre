@@ -2,3 +2,12 @@
 
 # Ignore the local installation of vLang
 v/
+
+# Executables
+src/main
+src/ransom
+src/ransomwvre
+
+main
+ransom
+ransomwvre
