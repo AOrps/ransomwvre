@@ -43,6 +43,8 @@ fn dec(ciphr cipher.Block, file string) string {
     mut decrypted := []byte{len: aes.block_size}
     ciphr.decrypt(mut decrypted, f.bytes())
     return decrypted.bytestr()
+
+    
 }
 
 
