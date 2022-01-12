@@ -6,7 +6,8 @@ import crypto.cipher
 /*
 Features:
 - Will encrypt empty files
-
+- Potentially can increase the size of file if filesize isn't divisible by aes.block_size (16)
+- If original file has null byte for some reason, it will get deleted in decryption
 */
 
 
@@ -66,20 +67,10 @@ fn dec(ciphr cipher.Block, file string) string {
         ciphr.decrypt(mut decrypted[start..end], fbyte[start..end])
     }
 
-    for i := (fbyte.len - 16); i < fbyte.len; i += 1 {
-        mut start := i
-        if decrypted[i] == "0".byte() {
-            start = i
-             
-        }
-        decrypted.delete_many(start, (fbyte.len - start) - 1)
-    }
+    // filter out all null byte characters to get original text
+    dec := decrypted.filter(it != '0'.byte())
 
-
-
-    return decrypted.bytestr()
-
-    
+    return dec.bytestr()
 }
 
 
