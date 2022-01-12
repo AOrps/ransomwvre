@@ -1,4 +1,0 @@
-# Reversing v Ransomware
-
-
-## Findings

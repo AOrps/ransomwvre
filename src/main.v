@@ -8,6 +8,7 @@ Features:
 - Will encrypt empty files
 - Potentially can increase the size of file if filesize isn't divisible by aes.block_size (16)
 - If original file has null byte for some reason, it will get deleted in decryption
+- Only works with files
 */
 
 
@@ -68,53 +69,65 @@ fn dec(ciphr cipher.Block, file string) string {
     }
 
     // filter out all null byte characters to get original text
-    dec := decrypted.filter(it != '0'.byte())
+    decr := decrypted.filter(it != '0'.byte())
 
-    return dec.bytestr()
+    return decr.bytestr()
+}
+
+// deftest : 
+fn deftest() {
+
+    // Test Files
+    file := 'test/file3.txt' // can change this to test functionality
+    out_file := 'test/enc.txt' 
+    tin_file := 'test/dec.txt'
+
+    // file 
+    f := os.read_file('$file') or {
+        println(err)
+        panic(err)
+    }
+    println("$f")
+
+    // create cipher from characters with len(bytes) == 32 for aes-256
+    ciphr := cipher("🕵🏻🕵🏻🕵🏻🕵🏻")
+    
+    // Encryption 
+    println("-------------------------------------")
+    encrypted := enc(ciphr, '$file')
+    os.write_file('$out_file', encrypted) or {
+        println(err)
+        panic(err)
+    }
+
+    g := os.read_file('$out_file') or {
+        println(err.msg)
+        panic(err)
+    }
+    println("$g")
+
+    // Decryption
+    println("=====================================")
+    decrypted := dec(ciphr, out_file)
+    os.write_file('$tin_file', decrypted) or {
+        println(err)
+        panic(err)
+    }
+
+    k := os.read_file('$tin_file') or {
+        println(err)
+        panic(err)
+    }
+    println("$k")
 }
 
 
-// main : handles command line arguments + 
+// main : handles command line arguments + does the dipp
 fn main() {
 
     // println(cmdline.only_non_options(os.args))
     // println(cmdline.only_options(os.args))
 
-    file := 'test/file3.txt'
-    out_file := 'test/enc.txt'
-    tin_file := 'test/dec.txt'
-
-    // file just ultimately be 16 bytes
-    f := os.read_file('$file')?
-    println("$f")
-
-    // j := f.bytes()
-
-    // println("j:\tlen($j.len)\n$j")
-
-    // create cipher from string
-    ciphr := cipher("🕵🏻🕵🏻🕵🏻🕵🏻")
-
-    println("-------------------------------------")
-
-    // 
-    encrypted := enc(ciphr, '$file')
-    os.write_file('$out_file', encrypted)?
-
-    g := os.read_file('$out_file')?
-    println("$g")
-
-    println("=====================================")
-
-
-    decrypted := dec(ciphr, out_file)
-    os.write_file('$tin_file', decrypted)?
-
-    k := os.read_file('$tin_file')?
-    println("$k")
-
-    
-
-
+    deftest()
 
 }
