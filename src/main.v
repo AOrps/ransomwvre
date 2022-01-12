@@ -14,8 +14,24 @@ fn enc(ciphr cipher.Block, file string) string {
         return err.msg
     }
 
-    mut encrypted := []byte{len: aes.block_size}
-    ciphr.encrypt(mut encrypted, f.bytes())
+    mut g := f.bytes() 
+    mut flen := g.len
+
+    println(g.len)
+
+    if flen < 16 {
+        g << []byte{len: aes.block_size - flen, init: '0'.byte()}
+        println(g.len)
+        mut encrypted := []byte{len: g.len, init: 0}
+        ciphr.encrypt(mut encrypted, g)
+        return encrypted.bytestr()
+    } else if flen > 16 {
+        // segment and encrypt
+    }
+
+
+    mut encrypted := []byte{len: flen, init: 0}
+    ciphr.encrypt(mut encrypted, g)
     return encrypted.bytestr()
 }
 
