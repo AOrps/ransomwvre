@@ -1,15 +1,16 @@
 # ransomwvre
 Ransomware in v [(vlang)](https://vlang.io/)
 
-## Motivation :pushpin:
+## :pushpin: Motivation 
 - Get :octocat: Github **clout** :sunglasses: by writing a v's (vlang) first documented ransomware
 - Proof-of-Concept (PoC) Malware that is free to Reverse and look at the source code to understand how vlang works
 
-## Description :scroll:
+## :scroll: Description 
 - [ransomwvre](.) uses the aes-256 block cipher that is implemented in [vlang's vlib](https://github.com/vlang/v/tree/master/vlib) with some modification to 
-- This is a **Proof-of-Concept**, not meant to be a
+- This is a **Proof-of-Concept**, not meant to be to be a full-fledged ransomware program that destroys computers.
+- It's more "ransomware" than ransomware, can also be used to encrypt files and directories.
 
-## Build :hammer:
+## :hammer: Build 
 ```sh
 # Clone repo
 git clone https://github.com/AOrps/ransomwvre.git
@@ -28,13 +29,13 @@ make
 ./ransomwvre -d <file>
 ```
 
-## Technical Details :blue_book:
+## :blue_book: Technical Details 
 - Techologies:
     - `v`, `make`, `git` 
 - v libraries:
     - `os`, `crypto.aes`, `crypto.cipher`, `os.cmdline` 
 
 
-## Reversing? :triangular_flag_on_post:
+## :triangular_flag_on_post: Reversing?
 - Check out some things in [Findings.md](rev-writeup/README.md)
     - NOTHING IS HERE currently
