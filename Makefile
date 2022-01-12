@@ -27,3 +27,9 @@ clean:
 ifneq (,$(wildcard ./$(EXECUTABLE)))
 	@rm $(EXECUTABLE)
 endif
+
+cclean: clean
+ifneq (,$(wildcard ./v))
+	@rm -rf ./v
+	@rm test/enc.txt
+endif

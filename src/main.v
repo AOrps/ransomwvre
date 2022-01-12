@@ -1,44 +1,76 @@
 import os
 import crypto.aes
-// import crypto.rand // uncomment for more optimal key
+import crypto.cipher
+// import os.cmdline
+
+// cipher: sets up cipher for the encryption and decryption
+fn cipher(key string) cipher.Block {
+    return aes.new_cipher(key.bytes())
+}
+
+// enc: handles encryption of a single file
+fn enc(ciphr cipher.Block, file string) string {
+    f := os.read_file(file) or {
+        return err.msg
+    }
+
+    mut encrypted := []byte{len: aes.block_size}
+    ciphr.encrypt(mut encrypted, f.bytes())
+    return encrypted.bytestr()
+}
+
+// dec: handles decryption of a single file
+fn dec(ciphr cipher.Block, file string) string {
+    f := os.read_file(file) or {
+        return err.msg
+    }
+    mut decrypted := []byte{len: aes.block_size}
+    ciphr.decrypt(mut decrypted, f.bytes())
+    return decrypted.bytestr()
+}
+
 
 // main : 
 fn main() {
-    println('Hello, World!')
+
+    // println(cmdline.only_non_options(os.args))
+    // println(cmdline.only_options(os.args))
+
+    file := 'test/file2.txt'
+    out_file := 'test/enc.txt'
+    tin_file := 'test/dec.txt'
 
     // file just ultimately be 16 bytes
-    f := os.read_file('test/file3.txt')?
+    f := os.read_file('$file')?
     println("$f")
 
-    j := f.bytes()
+    // j := f.bytes()
 
-    println("j:\tlen($j.len)\t$j")
+    // println("j:\tlen($j.len)\n$j")
 
-    // Emoji is 8 bytes
-    byter := "🕵🏻🕵🏻🕵🏻🕵🏻".bytes()
-    // To Check byter len is 32, uncomment line below
-    // println(byter.len)
+    // create cipher from string
+    ciphr := cipher("🕵🏻🕵🏻🕵🏻🕵🏻")
 
-    // Instead of byter use `key`
-    // key := rand.read(32)?
+    println("-------------------------------------")
 
-    cipher := aes.new_cipher(byter)
+    // 
+    encrypted := enc(ciphr, '$file')
+    os.write_file('$out_file', encrypted)?
 
-    mut encrypted := []byte{len: aes.block_size}
-
-    cipher.encrypt(mut encrypted, j)
-
-    println(encrypted)
-
-    mut decrypted := []byte{len: aes.block_size}
-    cipher.decrypt(mut decrypted, encrypted)
-    println(decrypted)
-
-    bytestr := encrypted.bytestr()
-    // write to the file that content has been received and add like ` 1`
-    os.write_file('test/enc.txt', bytestr)?
-
-    g := os.read_file('test/enc.txt')?
+    g := os.read_file('$out_file')?
     println("$g")
+
+    println("=====================================")
+
+
+    decrypted := dec(ciphr, out_file)
+    os.write_file('$tin_file', decrypted)?
+
+    k := os.read_file('$tin_file')?
+    println("$k")
+
+    
+
+
 
 }
