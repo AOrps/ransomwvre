@@ -23,6 +23,14 @@ compile: dep clean
 run: compile
 	@./$(EXECUTABLE)
 
+# etest: infers that the file is in plaintext
+etest: compile
+	@./$(EXECUTABLE) -x test/enc.txt
+
+# dtest: infers that the file is encrypted
+dtest: compile
+	@./$(EXECUTABLE) -d test/enc.txt
+
 clean:
 ifneq (,$(wildcard ./$(EXECUTABLE)))
 	@rm $(EXECUTABLE)
