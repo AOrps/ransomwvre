@@ -5,6 +5,9 @@ SHELL=/bin/bash
 SOURCEDIR = src
 EXECUTABLE = ransomwvre
 
+# Testing Defaults
+TESTDIR = test
+
 all : compile
 
 dep: 
@@ -23,13 +26,33 @@ compile: dep clean
 run: compile
 	@./$(EXECUTABLE)
 
-# etest: infers that the file is in plaintext
-etest: compile
-	@./$(EXECUTABLE) -x test/enc.txt
+# test: outputs result from command line encryption and decryption
+test: compile
+# Initializes test file
+	@cat $(TESTDIR)/file3.txt > $(TESTDIR)/enc.txt
+# Start Case
+	@echo "Start"
+	@echo "+++++++++++++++++++++++++++++++++++++++++++++++"
+	@cat $(TESTDIR)/enc.txt 
+	@echo -e "\n+++++++++++++++++++++++++++++++++++++++++++++++"
+	@echo ""
 
-# dtest: infers that the file is encrypted
-dtest: compile
-	@./$(EXECUTABLE) -d test/enc.txt
+# Encryption
+	@echo "Encryption"
+	@echo "-----------------------------------------------" 
+	@./$(EXECUTABLE) -x $(TESTDIR)/enc.txt
+	@cat $(TESTDIR)/enc.txt 
+	@echo -e "\n-----------------------------------------------"
+	@echo ""
+
+# Decryption
+	@echo "Decryption"
+	@echo "==============================================="
+	@./$(EXECUTABLE) -d $(TESTDIR)/enc.txt
+	@cat $(TESTDIR)/enc.txt 
+	@echo -e "\n==============================================="
+	@echo ""
+
 
 clean:
 ifneq (,$(wildcard ./$(EXECUTABLE)))
@@ -39,5 +62,5 @@ endif
 cclean: clean
 ifneq (,$(wildcard ./v))
 	@rm -rf ./v
-	@rm test/enc.txt
+	@rm $(TESTDIR)/enc.txt
 endif

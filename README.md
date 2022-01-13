@@ -8,7 +8,7 @@ Ransomware in v [(vlang)](https://vlang.io/)
 ## :scroll: Description 
 - [ransomwvre](.) uses the aes-256 block cipher that is implemented in [vlang's vlib](https://github.com/vlang/v/tree/master/vlib) with some modification to encryption and decryption schemes.
 - This is a **Proof-of-Concept**, not meant to be to be a full-fledged ransomware program that destroys computers.
-- It's more "ransomware" than ransomware, can also be used to encrypt files and directories.
+- It's more "ransomware" than ransomware, can also be used to encrypt files.
 
 ## :hammer: Build 
 ```sh
@@ -33,7 +33,7 @@ make
 
 ## :blue_book: Technical Details 
 - Techologies:
-    - `v`, `make`, `git` 
+    - `v`, `make`, `git`, `bash`
 - v libraries:
     - `os`, `crypto.aes`, `crypto.cipher`, `os.cmdline` 
 
